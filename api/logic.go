@@ -50,19 +50,19 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 
 	response, err := http.Get("https://api.ssllabs.com/api/v3/analyze?host=" + domain_name)
 	if err != nil {
-		log.Fatal("There was an error trying to connect to ssl labs")
+		log.Panicln("There was an error trying to connect to ssl labs")
 	}
 	defer response.Body.Close()
 
 	r, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.Fatal("There was an error trying to read the JSON from ssl labs")
+		log.Panicln("There was an error trying to read the JSON from ssl labs")
 	}
 
 	ssl_json := responseSSL{}
 	err = json.Unmarshal(r, &ssl_json)
 	if err != nil {
-		log.Fatal("There was an error trying to parse the JSON from ssl labs")
+		log.Panicln("There was an error trying to parse the JSON from ssl labs")
 	}
 
 	worst_grade := ssl_json.Endpoints[0].SslGrade
@@ -72,7 +72,7 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 		ip := net.ParseIP(address)
 		res, err := whois.QueryIP(ip)
 		if err != nil {
-			log.Fatal("There was an error trying to obtain the whois of the server " + address)
+			log.Panicln("There was an error trying to obtain the whois of the server " + address)
 		}
 		owner := strings.Join(res.Output["OrgName"], ",")
 		country := strings.Join(res.Output["Country"], ",")
@@ -84,7 +84,7 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 	res, err := http.Get("http://" + domain_name)
 	if err != nil {
 		is_down = true
-		log.Fatal("There was an error trying to connect to the domain " + domain_name)
+		log.Panicln("There was an error trying to connect to the domain " + domain_name)
 	}
 	defer res.Body.Close()
 	meta := htmlmeta.Extract(res.Body)
