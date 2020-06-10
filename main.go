@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"github.com/JuanJTorres11/Server_Info/api"
 	"github.com/buaazp/fasthttprouter"
 	"github.com/valyala/fasthttp"
 )
@@ -14,8 +15,8 @@ func Index(ctx *fasthttp.RequestCtx) {
 func main() {
 	router := fasthttprouter.New()
 	router.GET("/", Index)
-	router.GET("/servers_info/:name", domainInfo)
-	router.GET("/servers", listServers)
+	router.GET("/servers_info/:name", api.DomainInfo)
+	router.GET("/servers", api.ListServers)
 
 	log.Fatal(fasthttp.ListenAndServe(":8000", router.Handler))
 }

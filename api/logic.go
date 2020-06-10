@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"fmt"
@@ -27,7 +27,7 @@ type ServerList struct {
 	Items []Domain		`json:"items"`
 }
 
-func domainInfo(ctx *fasthttp.RequestCtx) {
+func DomainInfo(ctx *fasthttp.RequestCtx) {
 	//domain := ctx.UserValue("name")
 	server1 := Server{"addres1", "A", "Col", "Owner"}
 	server2 := Server{"addres2", "A", "Col", "Owner"}
@@ -36,6 +36,6 @@ func domainInfo(ctx *fasthttp.RequestCtx) {
 	json.NewEncoder(ctx).Encode(domain)
 }
 
-func listServers(ctx *fasthttp.RequestCtx) {
+func ListServers(ctx *fasthttp.RequestCtx) {
 	fmt.Fprint(ctx, "TODO!\n")
 }
