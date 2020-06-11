@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/jonlaing/htmlmeta"
 	"github.com/valyala/fasthttp"
@@ -39,8 +40,17 @@ type Domain struct {
 	Is_down          bool     `json:"is_down"`
 }
 
+type SimpleDomain struct {
+	Domain   string    `json:"domain"`
+	Servers  []Server  `json:"endpoints"`
+	SSLGrade string    `json:"ssl_grade"`
+	Logo     string    `json:"logo"`
+	Title    string    `json:"title"`
+	Time     time.Time `json:"time_consulted"`
+}
+
 type ServerList struct {
-	Items []Domain `json:"items"`
+	Items []SimpleDomain `json:"items"`
 }
 
 func DomainInfo(ctx *fasthttp.RequestCtx) {
@@ -101,7 +111,9 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 }
 
 func ListServers(ctx *fasthttp.RequestCtx) {
-	fmt.Fprint(ctx, "TODO!\n")
+	list := ServerList{}
+	list = GetDomains(list)
+	json.NewEncoder(ctx).Encode(list)
 }
 
 func compareGrades(grade1, grade2 string) string {

@@ -76,3 +76,48 @@ func UpdateDomain(servers []Server, simple_servers []ServerSSL, domain_name, gra
 
 	return change, ssl
 }
+
+func GetDomains(list ServerList) ServerList {
+
+	db, err := sql.Open("postgres",
+		"postgresql://user_servers:pwd@localhost:26257/domains?ssl=true&sslmode=require&sslrootcert=certs/ca.crt&sslkey=certs/client.user_servers.key&sslcert=certs/client.user_servers.crt")
+	if err != nil {
+		log.Panicln("error connecting to the database: ", err)
+	}
+	defer db.Close()
+
+	domains := []SimpleDomain{}
+
+	rows_domains, err := db.Query("SELECT domain, sslgrade, logo, title, time FROM domain")
+	if err != nil {
+		log.Panicln("Error retrieving the list of domains ", err)
+	}
+	defer rows_domains.Close()
+	for rows_domains.Next() {
+		var dom, ssl, logo, title string
+		var time time.Time
+		err := rows_domains.Scan(&dom, &ssl, &logo, &title, &time)
+		if err != nil {
+			log.Panicln("Error reading rows of table domains", err)
+		}
+		servers := []Server{}
+		rows_servers, err := db.Query("SELECT address, sslgrade, country, owner FROM server WHERE domain='" + dom + "'")
+		if err != nil {
+			log.Panicln("Error retrieving the list of servers of the domain ", dom, "Error message: ", err)
+		}
+		defer rows_servers.Close()
+		for rows_servers.Next() {
+			var add, ssl, country, owner string
+			err := rows_servers.Scan(&add, &ssl, &country, &owner)
+			if err != nil {
+				log.Panicln("Error reading rows of table server", err)
+			}
+			s := Server{add, ssl, country, owner}
+			servers = append(servers, s)
+		}
+		d := SimpleDomain{dom, servers, ssl, logo, title, time}
+		domains = append(domains, d)
+	}
+
+	return ServerList{domains}
+}
