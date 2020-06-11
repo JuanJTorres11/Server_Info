@@ -106,6 +106,7 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 
 	server_changed, prev_grade := UpdateDomain(servers, simple_servers, domain_name, worst_grade, image, title)
 	domain := Domain{servers, server_changed, worst_grade, prev_grade, image, title, is_down}
+	ctx.SetContentType("application/json")
 	json.NewEncoder(ctx).Encode(domain)
 
 }
@@ -113,6 +114,7 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 func ListServers(ctx *fasthttp.RequestCtx) {
 	list := ServerList{}
 	list = GetDomains(list)
+	ctx.SetContentType("application/json")
 	json.NewEncoder(ctx).Encode(list)
 }
 

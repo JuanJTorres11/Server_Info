@@ -25,5 +25,5 @@ func main() {
 	router.GET("/servers_info/:name", api.DomainInfo)
 	router.GET("/servers", api.ListServers)
 
-	log.Fatal(fasthttp.ListenAndServe(":8000", router.Handler))
+	log.Fatal(fasthttp.ListenAndServe(":4000", router.Handler))
 }
