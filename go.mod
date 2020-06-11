@@ -8,4 +8,5 @@ require (
 	github.com/valyala/fasthttp v1.12.0
 	github.com/jonlaing/htmlmeta v0.0.0-20151027182219-aa8670c4f78c
 	github.com/xellio/whois v0.0.0-20180807141814-bac499d94236
+	github.com/google/go-cmp v0.4.1
 )

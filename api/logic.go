@@ -21,13 +21,13 @@ type Server struct {
 	Owner    string `json:"owner"`
 }
 
-type serverSSL struct {
+type ServerSSL struct {
 	Address  string `json:"ipAddress"`
 	SslGrade string `json:"grade"`
 }
 
 type responseSSL struct {
-	Endpoints []serverSSL `json:"endpoints"`
+	Endpoints []ServerSSL `json:"endpoints"`
 }
 type Domain struct {
 	Servers          []Server `json:"endpoints"`
@@ -47,6 +47,7 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 	domain_name := fmt.Sprint(ctx.UserValue("name"))
 	servers := []Server{}
 	is_down := false
+	simple_servers := []ServerSSL{}
 
 	response, err := http.Get("https://api.ssllabs.com/api/v3/analyze?host=" + domain_name)
 	if err != nil {
@@ -69,6 +70,8 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 	for i := 0; i < len(ssl_json.Endpoints); i++ {
 		address := ssl_json.Endpoints[i].Address
 		grade := ssl_json.Endpoints[i].SslGrade
+		s := ServerSSL{address, grade}
+		simple_servers = append(simple_servers, s)
 		ip := net.ParseIP(address)
 		res, err := whois.QueryIP(ip)
 		if err != nil {
@@ -91,7 +94,7 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 	title := meta.OGTitle
 	image := meta.OGImage
 
-	server_changed, prev_grade := UpdateDomain(servers, domain_name, worst_grade, image, title)
+	server_changed, prev_grade := UpdateDomain(servers, simple_servers, domain_name, worst_grade, image, title)
 	domain := Domain{servers, server_changed, worst_grade, prev_grade, image, title, is_down}
 	json.NewEncoder(ctx).Encode(domain)
 

@@ -1,6 +1,8 @@
 CREATE USER IF NOT EXISTS user_servers;
 CREATE DATABASE IF NOT EXISTS domains;
 GRANT ALL ON DATABASE domains TO user_servers;
+GRANT ALL ON TABLE domains.* To user_servers;
+ALTER USER user_servers PASSWORD 'pwd';
 CREATE TABLE IF NOT EXISTS domains.domain (
     domain VARCHAR(50) PRIMARY KEY,
     sslgrade VARCHAR(2),
