@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS domains.domain (
     time TIMESTAMP
     );
 CREATE TABLE IF NOT EXISTS domains.server (
-    domain VARCHAR(50),
-    address VARCHAR(39) NOT NULL REFERENCES domains.domain (domain) ON DELETE CASCADE,
+    domain VARCHAR(50) NOT NULL REFERENCES domains.domain (domain) ON DELETE CASCADE,
+    address VARCHAR(39),
     sslgrade VARCHAR(2),
     country VARCHAR(30),
     owner VARCHAR(50),
