@@ -4,12 +4,50 @@
       <b-col cols=6>
         <input v-model="domain" placeholder="Enter the domain that you want to consult" class="form-control">
       </b-col>
-      <b-col cols=3>
+      <b-col cols=2>
         <b-button variant="info" @click="searchDomain">Send</b-button>
+        <b-button v-if="show" variant="danger" @click="show = false">Close</b-button>
       </b-col>
     </b-row>
     <transition name="bounce">
-    <h1 v-if="show">{{ info }}</h1>
+    <div v-if="show">
+      <b-card v-if="validLogo" :title="domain" body-class="max-width:500px" footer="Servers">
+        <b-row no-gutters>
+          <b-col cols=3>
+            <b-card-img :src="info.logo" alt="Image" style="max-height:150px; max-width:150px" class="rounded-0" ></b-card-img>
+          </b-col>
+          <b-col>
+            <b-card-text>
+              <b>The servers have changed: </b> {{info.servers_changed}} <br>
+              <b>SSL Grade: </b> {{info.ssl_grade}} <br>
+              <b>Previoud SSL Grade: </b> {{info.previous_ssl_grade}} <br>
+              <b>Title: </b> {{info.title}} <br>
+              <b>Is the domain down: </b> {{info.is_down}} <br>
+            </b-card-text>
+          </b-col>
+        </b-row>
+      </b-card>
+      <b-card v-else :title="domain" body-class="max-width:500px" footer="Servers">
+        <b-card-text>
+          <b>The servers have changed: </b> {{info.servers_changed}} <br>
+          <b>SSL Grade: </b> {{info.ssl_grade}} <br>
+          <b>Previoud SSL Grade: </b> {{info.previous_ssl_grade}} <br>
+          <b>Title: </b> {{info.title}} <br>
+          <b>Is the domain down: </b> {{info.is_down}} <br>
+        </b-card-text>
+      </b-card>
+       <b-card-group deck>
+         <div v-for="server in info.endpoints" v-bind:key="server.address">
+            <b-card :title="server.address">
+              <b-card-text>
+                <b>SSL Grade: </b> {{server.ssl_grade}} <br>
+                <b>Country: </b> {{server.country}} <br>
+                <b>Owner: </b> {{server.owner}} <br>
+              </b-card-text>
+            </b-card>
+         </div>
+       </b-card-group>
+    </div>
     </transition>
   </div>
 </template>
@@ -22,7 +60,7 @@ import axios from 'axios'
 export default class ServerInfo extends Vue {
   domain = ''
   show = false
-  info = null
+  info: any = {}
   searchDomain () {
     axios
       .get('http://localhost:4000/servers_info/' + this.domain)
@@ -31,6 +69,14 @@ export default class ServerInfo extends Vue {
         this.show = true
         console.log(this.info)
       })
+  }
+
+  validLogo () {
+    if (this.info!.logo === '') {
+      return false
+    } else {
+      return true
+    }
   }
 }
 
