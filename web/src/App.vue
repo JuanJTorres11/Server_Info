@@ -1,29 +1,23 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <button @click="show = !show">Search for a new domain!</button>
+    <ServerInfo v-if="show" />
+    <ServerList/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from './components/HelloWorld.vue'
+import ServerInfo from './components/ServerInfo.vue'
+import ServerList from './components/ServerList.vue'
 
 @Component({
   components: {
-    HelloWorld
+    ServerInfo,
+    ServerList
   }
 })
-export default class App extends Vue {}
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+export default class App extends Vue {
+  show = false
 }
-</style>
+</script>
