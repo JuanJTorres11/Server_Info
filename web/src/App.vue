@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <button @click="show = !show">Search for a new domain!</button>
-    <ServerInfo v-if="show" />
-    <ServerList/>
+    <b-tabs fill>
+      <b-tab title="List all domains consulted" active><ServerList/></b-tab>
+      <b-tab title="Search a new domain"><ServerInfo /></b-tab>
+  </b-tabs>
   </div>
 </template>
 
@@ -17,7 +18,5 @@ import ServerList from './components/ServerList.vue'
     ServerList
   }
 })
-export default class App extends Vue {
-  show = false
-}
+export default class App extends Vue {}
 </script>

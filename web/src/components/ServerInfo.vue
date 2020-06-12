@@ -1,8 +1,13 @@
 <template>
   <div class="ServerInfo">
-    <p> Enter the domain that you want to consult </p>
-    <input v-model="domain">
-    <button @click="searchDomain">Send</button>
+    <b-row>
+      <b-col cols=6>
+        <input v-model="domain" placeholder="Enter the domain that you want to consult" class="form-control">
+      </b-col>
+      <b-col cols=3>
+        <b-button variant="info" @click="searchDomain">Send</b-button>
+      </b-col>
+    </b-row>
     <transition name="bounce">
     <h1 v-if="show">{{ info }}</h1>
     </transition>
