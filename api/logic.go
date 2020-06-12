@@ -54,6 +54,12 @@ type ServerList struct {
 }
 
 func DomainInfo(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("There was an error", r)
+		}
+	}()
+
 	domain_name := fmt.Sprint(ctx.UserValue("name"))
 	servers := []Server{}
 	is_down := false
@@ -74,6 +80,10 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 	err = json.Unmarshal(r, &ssl_json)
 	if err != nil {
 		log.Panicln("There was an error trying to parse the JSON from ssl labs")
+	}
+
+	if len(ssl_json.Endpoints) == 0 {
+		log.Panicln("The call to ssl did not recover information correctly")
 	}
 
 	worst_grade := ssl_json.Endpoints[0].SslGrade
@@ -101,7 +111,12 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 	}
 	defer res.Body.Close()
 	meta := htmlmeta.Extract(res.Body)
-	title := meta.OGTitle
+	var title string
+	if meta.OGTitle != "" {
+		title = meta.OGTitle
+	} else {
+		title = domain_name
+	}
 	image := meta.OGImage
 
 	server_changed, prev_grade := UpdateDomain(servers, simple_servers, domain_name, worst_grade, image, title)
@@ -113,6 +128,12 @@ func DomainInfo(ctx *fasthttp.RequestCtx) {
 }
 
 func ListServers(ctx *fasthttp.RequestCtx) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("There was an error", r)
+		}
+	}()
+
 	list := ServerList{}
 	list = GetDomains(list)
 	ctx.SetContentType("application/json")

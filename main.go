@@ -15,11 +15,6 @@ func Index(ctx *fasthttp.RequestCtx) {
 
 func main() {
 	router := fasthttprouter.New()
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("There was an error", r)
-		}
-	}()
 
 	router.GET("/", Index)
 	router.GET("/servers_info/:name", api.DomainInfo)
