@@ -1,5 +1,5 @@
 <template>
-  <div class="ServerInfo">
+  <div class="ServerInfo" id="ServerInfo">
     <b-row>
       <b-col cols=6>
         <input v-model="domain" placeholder="Enter the domain that you want to consult" class="form-control">
@@ -11,7 +11,7 @@
     </b-row>
     <transition name="bounce">
     <div v-if="show">
-      <b-card v-if="validLogo" :title="domain" body-class="max-width:500px" footer="Servers">
+      <b-card v-if="validLogo" :title="domain" bg-variant="info" text-variant="white" footer="Servers" id="img">
         <b-row no-gutters>
           <b-col cols=3>
             <b-card-img :src="info.logo" alt="Image" style="max-height:150px; max-width:150px" class="rounded-0" ></b-card-img>
@@ -27,7 +27,7 @@
           </b-col>
         </b-row>
       </b-card>
-      <b-card v-else :title="domain" body-class="max-width:500px" footer="Servers">
+      <b-card v-else :title="domain" bg-variant="info" text-variant="white" footer="Servers">
         <b-card-text>
           <b>The servers have changed: </b> {{info.servers_changed}} <br>
           <b>SSL Grade: </b> {{info.ssl_grade}} <br>
@@ -38,7 +38,7 @@
       </b-card>
        <b-card-group deck>
          <div v-for="server in info.endpoints" v-bind:key="server.address">
-            <b-card :title="server.address">
+            <b-card :title="server.address" border-variant="success">
               <b-card-text>
                 <b>SSL Grade: </b> {{server.ssl_grade}} <br>
                 <b>Country: </b> {{server.country}} <br>
@@ -83,6 +83,16 @@ export default class ServerInfo extends Vue {
 </script>
 
 <style>
+#ServerInfo {
+  margin-left: 30px
+}
+#img {
+  width: 500px;
+}
+.card {
+  width: 400px;
+  margin:20px
+}
 .bounce-enter-active {
   animation: bounce-in .5s;
 }
