@@ -23,7 +23,9 @@ You can compile the backend with the go console tool `go build ./...` then you c
 
 ## Start the frontend
 
-TODO.
+1. Enter the web directory
+2. Install the dependencies with `npm install`
+3. Initiate the server with `npm run serve` and it will start in the port 8000
 
 # API Endpoints
 The endpoints of the API are:
