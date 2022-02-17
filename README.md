@@ -6,7 +6,7 @@ Web application that consist of a backend built with go that manage two API endp
 
 # How to deploy
 
-Here is the proccess to deploy the app
+Here is the proccess to deploy the app:
 
 ## Create the database
 
